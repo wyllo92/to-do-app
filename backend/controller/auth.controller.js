@@ -4,6 +4,7 @@ import { comparePassword } from "../library/appBcrypt.js";
 
 import dotenv from "dotenv";
 dotenv.config;
+import EmailController from "./email.controller.js";
 
 class AuthController {
   async register(req, res) {
@@ -42,6 +43,11 @@ class AuthController {
         expiresIn: "1h",
       });
       res.cookie("token", token, { httpOnly: true });
+      try {
+        await EmailController.sendLoginEmail(userModel);
+      } catch (e) {
+        console.error("Error enviando correo de login:", e);
+      }
       res.status(200).json({ message: "Successful login", token: token });
     } catch (err) {
       res.status(400).json({ error: err.message });

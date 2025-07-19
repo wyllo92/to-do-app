@@ -1,15 +1,69 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            body { font-family: Arial, sans-serif;}
-            .header { background-color: #3498db; padding: 20px; color: white; }
-        </style>
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(90deg, #3498db 60%, #2980b9 100%);
+            padding: 32px 24px 20px 24px;
+            color: #fff;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.1em;
+            letter-spacing: 1px;
+        }
+        .content {
+            padding: 28px 24px 24px 24px;
+            color: #333;
+        }
+        .content p {
+            margin: 0 0 16px 0;
+            font-size: 1.1em;
+        }
+        .footer {
+            background: #f0f3f7;
+            color: #888;
+            text-align: center;
+            font-size: 0.95em;
+            padding: 14px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
         <div class="header">
-            <h1>!Welcome, <%=name %>!</h1>
+            <h1><%= title %></h1>
         </div>
-        <p>Thank you registering on our platform</p>
-    </body>
+        <div class="content">
+            <p><%= message %></p>
+            <% if (typeof name !== 'undefined') { %>
+                <p><strong>Usuario:</strong> <%= name %></p>
+            <% } %>
+            <% if (typeof extra !== 'undefined') { %>
+                <div><%= extra %></div>
+            <% } %>
+        </div>
+        <div class="footer">
+            Este correo fue generado automáticamente. No respondas a este mensaje.<br>
+            &copy; <%= new Date().getFullYear() %> My App
+        </div>
+    </div>
+</body>
 </html>

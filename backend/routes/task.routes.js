@@ -1,6 +1,7 @@
 import { Router } from "express";
 import TaskController from '../controller/task.controller.js';
 import { verifyToken } from '../middleware/authMiddleware.js';
+import { upload } from '../config/files/filesConfig.js';
 
 const router = Router();
 const name = "/task";
@@ -10,7 +11,7 @@ const nameFiles = "/task/files";
 router.use(verifyToken);
 // Route for user registration and list
 router.route(name)
-    .post(TaskController.addTask)
+    .post(upload.single('file'), TaskController.addTask)
     .get(TaskController.getTasks);
 
 //Route for user by ID

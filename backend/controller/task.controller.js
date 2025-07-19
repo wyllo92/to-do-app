@@ -1,5 +1,8 @@
 import TaskModel from "../model/task.model.js"; // Import the user model
 import { mongoose } from "../config/db/connection.js"; // Import mongoose from the connection
+import path from "path";
+import { getFilePath } from "../config/files/filesConfig.js";
+import EmailController from "./email.controller.js";
 
 class TaskController {
   // Create a new task
@@ -42,6 +45,18 @@ class TaskController {
           .json({ error: "End date must be after start date" });
       }
 
+      // Procesar archivo subido (si existe)
+      let files = [];
+      if (req.file) {
+        files.push({
+          name: req.file.filename,
+          url: getFilePath(req.file.filename),
+          type: req.file.mimetype.startsWith('image') ? 'image' : req.file.mimetype.startsWith('video') ? 'video' : req.file.mimetype === 'application/pdf' ? 'document' : 'other',
+          extension: path.extname(req.file.originalname).toLowerCase(),
+          size: req.file.size,
+        });
+      }
+
       const newTasks = new TaskModel({
         title,
         description,
@@ -64,13 +79,17 @@ class TaskController {
           : null, // Convert to ObjectId if provided
         createdBy: createdBy || userId, // Use userId if createdBy is not provided
         tags: Array.isArray(tags) ? tags.map((tag) => tag.name) : [],
+        files,
       });
 
       const savedTasks = await newTasks.save();
       // Optional: Send notification by email
       if (notificationEmail) {
-        // Here you would integrate the emailController
-        // emailController.sendNotificationEmail(notificationEmail, savedTasks);
+        try {
+          await EmailController.sendTaskCreatedEmail({ email: notificationEmail }, savedTasks);
+        } catch (e) {
+          console.error("Error enviando correo de tarea creada:", e);
+        }
       }
       // Return the saved task as a response
       res.status(201).json({ data: savedTasks });

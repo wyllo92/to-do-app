@@ -44,9 +44,40 @@ class EmailController {
   static async sendWelcomeEmail(user) {
     return this.sendEmail({
       to: user.email,
-      subject: "Welcome to My App",
+      subject: "Bienvenido a My App",
       template: "welcome-email",
-      data: { name: user.name },
+      data: {
+        title: "¡Bienvenido!",
+        message: "Gracias por registrarte en nuestra plataforma.",
+        name: user.username || user.name || user.email,
+      },
+    });
+  }
+
+  static async sendTaskCreatedEmail(user, task) {
+    return this.sendEmail({
+      to: user.email,
+      subject: "Nueva tarea creada",
+      template: "welcome-email",
+      data: {
+        title: "Tarea creada exitosamente",
+        message: `Se ha creado la tarea: <b>${task.title}</b>`,
+        name: user.username || user.name || user.email,
+        extra: task.description || '',
+      },
+    });
+  }
+
+  static async sendLoginEmail(user) {
+    return this.sendEmail({
+      to: user.email,
+      subject: "Inicio de sesión exitoso",
+      template: "welcome-email",
+      data: {
+        title: "¡Has iniciado sesión!",
+        message: "Has accedido correctamente a tu cuenta.",
+        name: user.username || user.name || user.email,
+      },
     });
   }
 
